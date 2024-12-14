@@ -15,7 +15,11 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /todo", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Hello World"))
+		b, err := json.Marshal(todos)
+		if err != nil {
+			return
+		}
+		_, err = w.Write(b)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -29,6 +33,8 @@ func main() {
 			return
 		}
 		todos = append(todos, t.Item)
+		writer.WriteHeader(http.StatusCreated)
+		return
 	})
 
 	if err := http.ListenAndServe(":8080", mux); err != nil {
