@@ -7,25 +7,28 @@ type Item struct {
 	Status string
 }
 type Service struct {
-	todos []string
+	todos []Item
 }
 
 func NewService() *Service {
 	return &Service{
-		todos: make([]string, 0),
+		todos: make([]Item, 0),
 	}
 }
 func (svc *Service) Add(todo string) error {
 
 	for _, t := range svc.todos {
-		if t == todo {
+		if t.Task == todo {
 			return errors.New("todo already exists")
 		}
 	}
-	svc.todos = append(svc.todos, todo)
+	svc.todos = append(svc.todos, Item{
+		Task:   todo,
+		Status: "TO_BE_STARTED",
+	})
 	return nil
 }
 
-func (svc *Service) GetAll() []string {
+func (svc *Service) GetAll() []Item {
 	return svc.todos
 }
