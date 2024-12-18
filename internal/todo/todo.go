@@ -2,6 +2,10 @@ package todo
 
 import "errors"
 
+type Item struct {
+	Task   string
+	Status string
+}
 type Service struct {
 	todos []string
 }
