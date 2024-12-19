@@ -3,7 +3,12 @@ GET http://localhost:8080/todo
 
 ### POST request to add Todo
 POST http://localhost:8080/todo
+content-type: application/json
+
 
 {
-"item":"make soups"
+  "item": "go shopping"
 }
+
+### POST request to search for Todo
+GET http://localhost:8080/search?q=shoP

@@ -31,6 +31,7 @@ func NewServer(todoSvc *todo.Service) *Server {
 	mux.HandleFunc("POST /todo", func(writer http.ResponseWriter, request *http.Request) {
 		var t TodoItem
 		err := json.NewDecoder(request.Body).Decode(&t)
+
 		if err != nil {
 			log.Println(err)
 			writer.WriteHeader(http.StatusBadRequest)
@@ -43,6 +44,27 @@ func NewServer(todoSvc *todo.Service) *Server {
 		}
 		writer.WriteHeader(http.StatusCreated)
 		return
+	})
+
+	mux.HandleFunc("GET /search", func(writer http.ResponseWriter, request *http.Request) {
+		query := request.URL.Query().Get("q")
+
+		if query == "" {
+			writer.WriteHeader(http.StatusBadRequest)
+		}
+		results := todoSvc.Search(query)
+		b, err := json.Marshal(results)
+
+		if err != nil {
+			writer.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		_, err = writer.Write(b)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+
 	})
 
 	return &Server{
